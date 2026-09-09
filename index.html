@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Helinstaller — Единая экосистема Android & Windows</title>
+  <meta name="description" content="Helinstaller — системный комбайн для Android (Shizuku, Debloater, Каталог форков) и Windows (WinGet, Твики, Ventoy, Телеметрия)." />
+  
+  <!-- Шрифты Google Fonts: Roboto Flex (для Material 3) и Inter (универсальный) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Flex:opsz,wght@8..144,400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      /* Общие переменные */
+      --font-fluent: "Segoe UI Variable Text", "Segoe UI", "Inter", -apple-system, sans-serif;
+      --font-material: "Roboto Flex", "Roboto", system-ui, sans-serif;
+      --font-mono: "JetBrains Mono", monospace;
+
+      /* Material You (Android Theme) */
+      --m3-bg: #141218;
+      --m3-surface: #1d1b20;
+      --m3-surface-high: #2b2930;
+      --m3-surface-highest: #36343b;
+      --m3-primary: #d0bcff;
+      --m3-on-primary: #381e72;
+      --m3-primary-container: #4f378b;
+      --m3-secondary-container: #4a4458;
+      --m3-tertiary-container: #633b48;
+      --m3-text: #e6e0e9;
+      --m3-text-variant: #cac4d0;
+      --m3-outline: #938f99;
+      --m3-radius-lg: 28px;
+      --m3-radius-md: 18px;
+      --m3-radius-pill: 9999px;
+
+      /* Fluent Mica (Windows Theme) */
+      --mica-bg: #202020;
+      --mica-glass: rgba(36, 36, 36, 0.72);
+      --mica-card: rgba(255, 255, 255, 0.05);
+      --mica-card-hover: rgba(255, 255, 255, 0.09);
+      --mica-border: rgba(255, 255, 255, 0.08);
+      --mica-border-active: rgba(255, 255, 255, 0.22);
+      --fluent-accent: #60cdff;
+      --fluent-accent-hover: #4cc2ff;
+      --fluent-accent-bg: rgba(96, 205, 255, 0.15);
+      --fluent-text: #ffffff;
+      --fluent-text-secondary: rgba(255, 255, 255, 0.65);
+      --fluent-radius: 8px;
+      --fluent-radius-card: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #0d0d11;
+      color: #ffffff;
+      font-family: var(--font-fluent);
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Навбар */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      background: rgba(13, 13, 17, 0.75);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 14px 24px;
+    }
+
+    .nav-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: -0.02em;
+    }
+
+    .logo-icon {
+      width: 34px;
+      height: 34px;
+      background: linear-gradient(135deg, var(--fluent-accent), #d0bcff);
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 1.1rem;
+      color: #000;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .platform-switcher {
+      display: flex;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 4px;
+      border-radius: 9999px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .switch-btn {
+      border: none;
+      background: transparent;
+      color: var(--fluent-text-secondary);
+      padding: 6px 16px;
+      border-radius: 9999px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .switch-btn.active {
+      background: rgba(255, 255, 255, 0.18);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .gh-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: 0.2s ease;
+    }
+    .gh-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Hero */
+    .hero {
+      padding: 70px 24px 40px;
+      text-align: center;
+      position: relative;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: -150px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 700px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(96, 205, 255, 0.15) 0%, rgba(208, 188, 255, 0.1) 40%, transparent 70%);
+      filter: blur(60px);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: 0.85rem;
+      margin-bottom: 24px;
+      color: #d0bcff;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 5vw, 4.2rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 20px;
+      background: linear-gradient(180deg, #ffffff 40%, rgba(255,255,255,0.7) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      max-width: 680px;
+      margin: 0 auto 34px;
+      font-size: 1.12rem;
+      color: var(--fluent-text-secondary);
+      font-weight: 400;
+    }
+
+    /* Интерактивный мост Экосистемы */
+    .bridge-banner {
+      max-width: 1040px;
+      margin: 0 auto 60px;
+      background: linear-gradient(90deg, rgba(208, 188, 255, 0.08) 0%, rgba(96, 205, 255, 0.08) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      padding: 20px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .bridge-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .bridge-badge {
+      background: #4caf50;
+      color: #000;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    /* ========================================================
+       СПЛИТ-СЕКЦИИ: ANDROID (MATERIAL 3) & WINDOWS (FLUENT MICA)
+       ======================================================== */
+    .split-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 20px 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 960px) {
+      .split-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ---------------- ANDROID (MATERIAL YOU) ---------------- */
+    .platform-panel.android-side {
+      font-family: var(--font-material);
+      background: var(--m3-bg);
+      border-radius: var(--m3-radius-lg);
+      padding: 36px 30px;
+      border: 1px solid rgba(208, 188, 255, 0.15);
+      position: relative;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    }
+
+    .m3-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--m3-secondary-container);
+      color: var(--m3-text);
+      padding: 6px 14px;
+      border-radius: var(--m3-radius-pill);
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .android-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--m3-text);
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+
+    .android-desc {
+      color: var(--m3-text-variant);
+      font-size: 0.98rem;
+      margin-bottom: 28px;
+    }
+
+    /* Карточки M3 */
+    .m3-card {
+      background: var(--m3-surface);
+      border-radius: var(--m3-radius-md);
+      padding: 18px;
+      margin-bottom: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .m3-card:hover {
+      background: var(--m3-surface-high);
+      transform: translateY(-2px);
+    }
+
+    .m3-card-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 8px;
+    }
+
+    .m3-card-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: var(--m3-primary-container);
+      color: var(--m3-primary);
+      display: grid;
+      place-items: center;
+      font-size: 1.25rem;
+    }
+
+    .m3-card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--m3-text);
+    }
+
+    .m3-card-sub {
+      font-size: 0.84rem;
+      color: var(--m3-text-variant);
+    }
+
+    .m3-pill-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 16px 24px;
+      background: var(--m3-primary);
+      color: var(--m3-on-primary);
+      border-radius: var(--m3-radius-pill);
+      font-weight: 700;
+      font-size: 1rem;
+      margin-top: 24px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .m3-pill-btn:hover {
+      opacity: 0.92;
+      transform: scale(0.98);
+      box-shadow: 0 6px 20px rgba(208, 188, 255, 0.3);
+    }
+
+    /* ---------------- WINDOWS (FLUENT MICA) ---------------- */
+    .platform-panel.windows-side {
+      font-family: var(--font-fluent);
+      background: var(--mica-bg);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border-radius: var(--fluent-radius-card);
+      padding: 36px 30px;
+      border: 1px solid var(--mica-border);
+      position: relative;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    }
+
+    .fluent-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--fluent-accent-bg);
+      color: var(--fluent-accent);
+      border: 1px solid rgba(96, 205, 255, 0.3);
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .windows-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+
+    .windows-desc {
+      color: var(--fluent-text-secondary);
+      font-size: 0.98rem;
+      margin-bottom: 28px;
+    }
+
+    /* Dynamic Island Widget Demo на Windows */
+    .island-preview {
+      background: #000;
+      border-radius: 9999px;
+      padding: 8px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      margin-bottom: 22px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+    }
+    .island-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .island-avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #60cdff, #a855f7);
+    }
+    .island-music {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #fff;
+    }
+    .island-bars {
+      display: flex;
+      align-items: center;
+      gap: 2.5px;
+      height: 14px;
+    }
+    .bar {
+      width: 2.5px;
+      background: var(--fluent-accent);
+      border-radius: 2px;
+      animation: equalize 1s infinite alternate ease-in-out;
+    }
+    .bar:nth-child(1) { height: 6px; animation-delay: 0.1s; }
+    .bar:nth-child(2) { height: 14px; animation-delay: 0.3s; }
+    .bar:nth-child(3) { height: 9px; animation-delay: 0.2s; }
+    .bar:nth-child(4) { height: 12px; animation-delay: 0.4s; }
+
+    @keyframes equalize {
+      0% { transform: scaleY(0.4); }
+      100% { transform: scaleY(1.3); }
+    }
+
+    /* Карточки Mica */
+    .fluent-card {
+      background: var(--mica-card);
+      border-radius: var(--fluent-radius);
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 1px solid var(--mica-border);
+      transition: all 0.2s ease;
+    }
+    .fluent-card:hover {
+      background: var(--mica-card-hover);
+      border-color: var(--mica-border-active);
+    }
+
+    .fluent-card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .fluent-icon {
+      font-size: 1.25rem;
+      color: var(--fluent-accent);
+    }
+
+    .fluent-card-title {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .fluent-card-sub {
+      font-size: 0.84rem;
+      color: var(--fluent-text-secondary);
+    }
+
+    .fluent-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 14px 24px;
+      background: var(--fluent-accent);
+      color: #000;
+      border-radius: var(--fluent-radius);
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-top: 24px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+    }
+    .fluent-btn:hover {
+      background: var(--fluent-accent-hover);
+      box-shadow: 0 6px 20px rgba(96, 205, 255, 0.35);
+    }
+
+    /* Подвал */
+    footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 32px 24px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    /* Скрытие по фильтру шапки */
+    .filter-hidden {
+      display: none !important;
+    }
+    .filter-full {
+      grid-column: span 2;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- НАВБАР -->
+  <header>
+    <div class="nav-container">
+      <div class="logo">
+        <div class="logo-icon">⚡</div>
+        <span>Helinstaller</span>
+      </div>
+
+      <div class="nav-links">
+        <div class="platform-switcher">
+          <button class="switch-btn active" id="btn-all" onclick="filterPlatform('all')">Вселенная</button>
+          <button class="switch-btn" id="btn-android" onclick="filterPlatform('android')">Android M3</button>
+          <button class="switch-btn" id="btn-windows" onclick="filterPlatform('windows')">Windows Mica</button>
+        </div>
+
+        <a href="https://github.com/helitop/helinstaller_mobile" target="_blank" class="gh-btn">
+          <span>GitHub</span>
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <main>
+    <section class="hero">
+      <div class="hero-badge">
+        <span>🚀 Две платформы — Единая связка без ограничений</span>
+      </div>
+      <h1>Контролируй систему целиком.<br>На телефоне и на компьютере.</h1>
+      <p>
+        Системный комбайн для Android на базе Shizuku и полнофункциональный центр настройки Windows 11 на движке Fluent с единым мостом удалённого управления по локальной сети.
+      </p>
+
+      <!-- Интерактивный статус моста экосистемы -->
+      <div class="bridge-banner">
+        <div class="bridge-info">
+          <span class="bridge-badge">LIVE BRIDGE</span>
+          <div style="text-align: left;">
+            <div style="font-weight: 700; font-size: 0.95rem;">Helinstaller Link (WebSocket & UDP Beacon)</div>
+            <div style="font-size: 0.8rem; color: var(--fluent-text-secondary);">Мониторинг ЦП/ГП/ОЗУ ПК прямо в виджете смартфона, передача прокси и тихая установка WinGet на ПК.</div>
+          </div>
+        </div>
+        <div style="font-family: var(--font-mono); font-size: 0.85rem; color: #60cdff; background: rgba(0,0,0,0.3); padding: 6px 12px; border-radius: 8px;">
+          :49152 UDP | :49153 WS
+        </div>
+      </div>
+    </section>
+
+    <!-- СПЛИТ-СЕКЦИЯ -->
+    <div class="split-container" id="split-grid">
+      
+      <!-- ANDROID PANEL (MATERIAL 3) -->
+      <div class="platform-panel android-side" id="panel-android">
+        <div class="m3-tag">
+          <span>🤖 Android 13+ • Material You</span>
+        </div>
+        <h2 class="android-title">Helinstaller Mobile</h2>
+        <p class="android-desc">
+          Глубокая кастомизация Android без Root-прав через Shizuku. Деблоатер, тихая установка сплит-пакетов и персональный каталог модификаций.
+        </p>
+
+        <div class="m3-card">
+          <div class="m3-card-header">
+            <div class="m3-card-icon">⚡</div>
+            <div>
+              <div class="m3-card-title">Твики системы через Shizuku</div>
+              <div class="m3-card-sub">Плавные 120 Гц, смена DPI, скорость анимаций 0.25x–1.5x, ART AOT компиляция и Doze mode.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="m3-card">
+          <div class="m3-card-header">
+            <div class="m3-card-icon">🗑️</div>
+            <div>
+              <div class="m3-card-title">Умный Debloater</div>
+              <div class="m3-card-sub">Безопасное отключение и удаление предустановленного хлама Xiaomi, Samsung, Huawei и Google.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="m3-card">
+          <div class="m3-card-header">
+            <div class="m3-card-icon">📦</div>
+            <div>
+              <div class="m3-card-title">Каталог форков & Telegram API</div>
+              <div class="m3-card-sub">Прямой доступ к ReVanced, Seal, RiMusic, AyuGram через TDLib с тихой установкой Split APKs.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="m3-card">
+          <div class="m3-card-header">
+            <div class="m3-card-icon">🛡️</div>
+            <div>
+              <div class="m3-card-title">Чекер MTProto Fake-TLS & DNS</div>
+              <div class="m3-card-sub">GeoHide DNS для ChatGPT и Xbox DNS для игр. Поиск рабочих прокси с пингом в реальном времени.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Кнопка скачивания APK -->
+        <a href="https://github.com/helitop/helinstaller_mobile/releases/latest" target="_blank" class="m3-pill-btn">
+          <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM12 2L6.5 7.5l1.42 1.41L11 5.83V16h2V5.83l3.08 3.09 1.42-1.41L12 2z"/></svg>
+          <span>Скачать Helinstaller.apk</span>
+        </a>
+      </div>
+
+      <!-- WINDOWS PANEL (FLUENT MICA) -->
+      <div class="platform-panel windows-side" id="panel-windows">
+        <div class="fluent-tag">
+          <span>🪟 Windows 10 / 11 • Fluent Mica</span>
+        </div>
+        <h2 class="windows-title">Helinstaller Windows</h2>
+        <p class="windows-desc">
+          Комплексный центр настройки и развёртывания системы. WinGet-менеджер, автоустановка Office, Ventoy и скрипты оптимизации.
+        </p>
+
+        <!-- Dynamic Island Demo -->
+        <div class="island-preview">
+          <div class="island-left">
+            <div class="island-avatar"></div>
+            <div>
+              <div class="island-music">Helinstaller Dynamic Island</div>
+              <div style="font-size: 0.7rem; color: rgba(255,255,255,0.5);">Живая лирика песен и статус задач WinGet</div>
+            </div>
+          </div>
+          <div class="island-bars">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+          </div>
+        </div>
+
+        <div class="fluent-card">
+          <div class="fluent-card-header">
+            <span class="fluent-icon">🛠️</span>
+            <div>
+              <div class="fluent-card-title">Твики & Активация MAS</div>
+              <div class="fluent-card-sub">Вечный цифровой HWID для Windows/Office, активация WinRAR, выключение UAC и удаление Яндекс-модулей.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fluent-card">
+          <div class="fluent-card-header">
+            <span class="fluent-icon">💿</span>
+            <div>
+              <div class="fluent-card-title">Ventoy & Автоустановка (OOBE)</div>
+              <div class="fluent-card-sub">Создание загрузочных флешек, обход TPM 2.0 / SecureBoot и генерация файла autounattend.xml.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fluent-card">
+          <div class="fluent-card-header">
+            <span class="fluent-icon">📊</span>
+            <div>
+              <div class="fluent-card-title">Аппаратный мониторинг & S.M.A.R.T.</div>
+              <div class="fluent-card-sub">Прямой опрос температур ЦП/ГП, нагрузка 3D-ядра, скорость сети и здоровье SSD в реальном времени.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fluent-card">
+          <div class="fluent-card-header">
+            <span class="fluent-icon">🌐</span>
+            <div>
+              <div class="fluent-card-title">WinGet & Microsoft Store</div>
+              <div class="fluent-card-sub">Пакетная установка любого ПО без мусора и рекламы. Автоматическое обновление всех программ в 1 клик.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Кнопка скачивания Windows -->
+        <a href="https://github.com/helitop/helinstaller_mobile/releases" target="_blank" class="fluent-btn">
+          <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.901-1.748"/></svg>
+          <span>Скачать для Windows (.exe)</span>
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>Helinstaller © 2026. Разработано с открытым исходным кодом. Лицензия MIT.</p>
+  </footer>
+
+  <script>
+    // Интерактивный фильтр вида платформ
+    function filterPlatform(type) {
+      const btnAll = document.getElementById('btn-all');
+      const btnAnd = document.getElementById('btn-android');
+      const btnWin = document.getElementById('btn-windows');
+
+      const panelAnd = document.getElementById('panel-android');
+      const panelWin = document.getElementById('panel-windows');
+
+      [btnAll, btnAnd, btnWin].forEach(b => b.classList.remove('active'));
+
+      if (type === 'all') {
+        btnAll.classList.add('active');
+        panelAnd.classList.remove('filter-hidden', 'filter-full');
+        panelWin.classList.remove('filter-hidden', 'filter-full');
+      } else if (type === 'android') {
+        btnAnd.classList.add('active');
+        panelAnd.classList.remove('filter-hidden');
+        panelAnd.classList.add('filter-full');
+        panelWin.classList.add('filter-hidden');
+      } else if (type === 'windows') {
+        btnWin.classList.add('active');
+        panelWin.classList.remove('filter-hidden');
+        panelWin.classList.add('filter-full');
+        panelAnd.classList.add('filter-hidden');
+      }
+    }
+  </script>
+</body>
+</html>
