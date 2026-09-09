@@ -1,718 +1,1243 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="fluent">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Helinstaller — Единая экосистема Android & Windows</title>
-  <meta name="description" content="Helinstaller — системный комбайн для Android (Shizuku, Debloater, Каталог форков) и Windows (WinGet, Твики, Ventoy, Телеметрия)." />
-  
-  <!-- Шрифты Google Fonts: Roboto Flex (для Material 3) и Inter (универсальный) -->
+  <title>Helinstaller — System Hub</title>
+  <meta name="description" content="Helinstaller: Системный комбайн для Android (Shizuku, Debloater) и Windows (WinGet, Твики, MAS, Ventoy)." />
+
+  <!-- Шрифты -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Flex:opsz,wght@8..144,400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Flex:opsz,wght@8..144,400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      /* Общие переменные */
-      --font-fluent: "Segoe UI Variable Text", "Segoe UI", "Inter", -apple-system, sans-serif;
-      --font-material: "Roboto Flex", "Roboto", system-ui, sans-serif;
-      --font-mono: "JetBrains Mono", monospace;
-
-      /* Material You (Android Theme) */
-      --m3-bg: #141218;
-      --m3-surface: #1d1b20;
-      --m3-surface-high: #2b2930;
-      --m3-surface-highest: #36343b;
-      --m3-primary: #d0bcff;
-      --m3-on-primary: #381e72;
-      --m3-primary-container: #4f378b;
-      --m3-secondary-container: #4a4458;
-      --m3-tertiary-container: #633b48;
-      --m3-text: #e6e0e9;
-      --m3-text-variant: #cac4d0;
-      --m3-outline: #938f99;
-      --m3-radius-lg: 28px;
-      --m3-radius-md: 18px;
-      --m3-radius-pill: 9999px;
-
-      /* Fluent Mica (Windows Theme) */
-      --mica-bg: #202020;
-      --mica-glass: rgba(36, 36, 36, 0.72);
-      --mica-card: rgba(255, 255, 255, 0.05);
-      --mica-card-hover: rgba(255, 255, 255, 0.09);
-      --mica-border: rgba(255, 255, 255, 0.08);
-      --mica-border-active: rgba(255, 255, 255, 0.22);
-      --fluent-accent: #60cdff;
-      --fluent-accent-hover: #4cc2ff;
-      --fluent-accent-bg: rgba(96, 205, 255, 0.15);
-      --fluent-text: #ffffff;
-      --fluent-text-secondary: rgba(255, 255, 255, 0.65);
-      --fluent-radius: 8px;
-      --fluent-radius-card: 12px;
+      --lavender-100: #F3EDF7;
+      --lavender-200: #EADDFF;
+      --lavender-300: #D0BCFF;
+      --lavender-400: #B794F6;
+      --lavender-500: #9A6AFF;
+      --lavender-700: #4F378B;
+      --lavender-800: #381E72;
+      --lavender-900: #21005D;
+      
+      --ease-m3: cubic-bezier(0.2, 0, 0, 1);
+      --ease-fluent: cubic-bezier(0.1, 0.9, 0.2, 1);
+      --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    * {
+    /* Убираем синее пятно/оверлей при тапе на мобилках */
+    *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
     }
 
-    body {
-      background-color: #0d0d11;
-      color: #ffffff;
-      font-family: var(--font-fluent);
-      overflow-x: hidden;
+    /* Запрет системного выделения текста при кликах */
+    button, a, .m3-card, .fluent-card, .resource-card, .island-pill, .tab-btn {
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    /* =========================================================
+       1. ANDROID (MATERIAL 3)
+       ========================================================= */
+    html[data-theme="m3"] body {
+      background-color: #141218;
+      color: #E6E0E9;
+      font-family: "Roboto Flex", Roboto, system-ui, sans-serif;
+    }
+
+    html[data-theme="m3"] header {
+      background: #1D1B20;
+      border-bottom: 1px solid #2B2930;
+    }
+
+    html[data-theme="m3"] .brand-badge {
+      border-radius: 12px;
+      background: var(--lavender-700);
+      box-shadow: none;
+    }
+
+    html[data-theme="m3"] .btn-github {
+      background: #2B2930;
+      color: var(--lavender-200);
+      border: none;
+      border-radius: 9999px;
+    }
+    html[data-theme="m3"] .btn-github:hover {
+      background: #36343B;
+      transform: scale(1.03);
+    }
+
+    html[data-theme="m3"] .hero-pill {
+      background: #2B2930;
+      border: none;
+      color: var(--lavender-300);
+      border-radius: 9999px;
+    }
+
+    html[data-theme="m3"] .tabs-nav {
+      background: #211F26;
+      border-radius: 9999px;
+      border: 1px solid #2B2930;
+    }
+    html[data-theme="m3"] .tab-glider {
+      background: var(--lavender-300);
+      border-radius: 9999px;
+    }
+    html[data-theme="m3"] .tab-btn.active {
+      color: var(--lavender-900);
+    }
+    html[data-theme="m3"] .tab-btn {
+      color: #CAC4D0;
+    }
+
+    html[data-theme="m3"] .btn-switch-alt {
+      background: #2B2930;
+      border: none;
+      color: var(--lavender-200);
+      border-radius: 9999px;
+    }
+    html[data-theme="m3"] .btn-switch-alt:hover {
+      background: #36343B;
+      transform: scale(1.03);
+    }
+
+    .android-container {
+      background: #1D1B20;
+      border-radius: 28px;
+      padding: 32px 26px;
+      border: 1px solid #2B2930;
+      display: flex;
+      flex-direction: column;
+      animation: m3PopIn 0.5s var(--ease-m3) backwards;
+    }
+
+    @keyframes m3PopIn {
+      from { opacity: 0; transform: translateY(24px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .m3-header {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .m3-app-icon-slot {
+      width: 64px;
+      height: 64px;
+      flex-shrink: 0;
+      transition: transform 0.3s var(--ease-bounce);
+    }
+    .m3-header:hover .m3-app-icon-slot {
+      transform: rotate(-6deg) scale(1.08);
+    }
+
+    .m3-app-icon-slot img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .m3-badge {
+      display: inline-block;
+      background: #4A4458;
+      color: #E8DEF8;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .m3-title {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: #E6E0E9;
+      line-height: 1.2;
+    }
+
+    .m3-desc {
+      color: #CAC4D0;
+      font-size: 0.95rem;
+      margin-bottom: 24px;
       line-height: 1.5;
     }
 
-    a {
-      text-decoration: none;
-      color: inherit;
+    .m3-modules {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-bottom: 28px;
     }
 
-    /* Навбар */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      background: rgba(13, 13, 17, 0.75);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 14px 24px;
+    @media (max-width: 640px) {
+      .m3-modules { grid-template-columns: 1fr; }
     }
 
-    .nav-container {
-      max-width: 1240px;
-      margin: 0 auto;
+    .m3-card {
+      background: #211F26;
+      border-radius: 16px;
+      padding: 16px 18px;
       display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      border: 1px solid #2B2930;
+      transition: transform 0.25s var(--ease-m3), background-color 0.2s ease;
+    }
+
+    .m3-card:hover {
+      background: #2B2930;
+      transform: translateY(-3px);
+    }
+
+    .m3-card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 9999px;
+      background: var(--lavender-700);
+      color: var(--lavender-300);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      transition: transform 0.3s var(--ease-bounce);
+    }
+    
+    .m3-card-icon svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .m3-card-body h4 {
+      font-size: 0.96rem;
+      font-weight: 700;
+      color: #E6E0E9;
+      margin-bottom: 4px;
+    }
+
+    .m3-card-body p {
+      font-size: 0.85rem;
+      color: #CAC4D0;
+      line-height: 1.45;
+    }
+
+    .m3-btn-download {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      height: 52px;
+      background: var(--lavender-300);
+      color: var(--lavender-900);
+      border-radius: 9999px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.2s var(--ease-m3), box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .m3-btn-download:hover:not(:disabled) {
+      background: #dfd1ff;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(208, 188, 255, 0.3);
+    }
+
+    /* Состояние "В разработке" */
+    .btn-disabled {
+      background: #2B2930 !important;
+      color: #8E8895 !important;
+      cursor: not-allowed !important;
+      box-shadow: none !important;
+      transform: none !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    }
+
+    /* =========================================================
+       2. WINDOWS 11 (FLUENT MICA)
+       ========================================================= */
+    html[data-theme="fluent"] body {
+      background-color: #0C0B10;
+      color: #FFFFFF;
+      font-family: "Segoe UI Variable Display", "Segoe UI", Inter, sans-serif;
+    }
+
+    html[data-theme="fluent"] header {
+      background: #141318;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    html[data-theme="fluent"] .brand-badge {
+      border-radius: 6px;
+      background: linear-gradient(135deg, var(--lavender-400), var(--lavender-700));
+      box-shadow: 0 2px 8px rgba(183, 148, 246, 0.25);
+    }
+
+    html[data-theme="fluent"] .btn-github {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      color: #FFFFFF;
+    }
+    html[data-theme="fluent"] .btn-github:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--lavender-400);
+      transform: translateY(-1px);
+    }
+
+    html[data-theme="fluent"] .hero-pill {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--lavender-300);
+      border-radius: 6px;
+    }
+
+    html[data-theme="fluent"] .tabs-nav {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    html[data-theme="fluent"] .tab-glider {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+    }
+    html[data-theme="fluent"] .tab-btn.active {
+      color: #FFFFFF;
+    }
+    html[data-theme="fluent"] .tab-btn {
+      color: rgba(255, 255, 255, 0.65);
+    }
+
+    html[data-theme="fluent"] .btn-switch-alt {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      color: var(--lavender-300);
+    }
+    html[data-theme="fluent"] .btn-switch-alt:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--lavender-400);
+      color: #FFFFFF;
+      transform: translateY(-1px);
+    }
+
+    .windows-window-wrapper {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 24px 60px -10px rgba(0, 0, 0, 0.85);
+      background-color: #121118;
+      animation: fluentPopIn 0.45s var(--ease-fluent) backwards;
+    }
+
+    @keyframes fluentPopIn {
+      from { opacity: 0; transform: scale(0.97) translateY(16px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .mica-glow-1 {
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 380px;
+      height: 380px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(183, 148, 246, 0.45) 0%, rgba(183, 148, 246, 0) 70%);
+      pointer-events: none;
+      z-index: 0;
+      animation: micaOrbit1 14s infinite alternate ease-in-out;
+    }
+
+    .mica-glow-2 {
+      position: absolute;
+      bottom: -50px;
+      left: -30px;
+      width: 440px;
+      height: 440px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(120, 60, 220, 0.38) 0%, rgba(120, 60, 220, 0) 70%);
+      pointer-events: none;
+      z-index: 0;
+      animation: micaOrbit2 16s infinite alternate ease-in-out;
+    }
+
+    .mica-glow-3 {
+      position: absolute;
+      top: 35%;
+      left: 25%;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(208, 188, 255, 0.25) 0%, rgba(208, 188, 255, 0) 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes micaOrbit1 {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(-45px, 40px) scale(1.08); }
+    }
+    @keyframes micaOrbit2 {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(50px, -35px) scale(1.1); }
+    }
+
+    .windows-container {
+      position: relative;
+      z-index: 1;
+      background: rgba(24, 23, 30, 0.65);
+      backdrop-filter: blur(40px) saturate(160%);
+      -webkit-backdrop-filter: blur(40px) saturate(160%);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 1px solid rgba(255, 255, 255, 0.22);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .fluent-titlebar {
+      height: 38px;
+      background: rgba(0, 0, 0, 0.25);
+      display: flex;
+      align-items: center;
       justify-content: space-between;
-      align-items: center;
+      padding: 0 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.65);
+      user-select: none;
     }
 
-    .logo {
+    .window-controls {
       display: flex;
       align-items: center;
-      gap: 12px;
-      font-weight: 800;
-      font-size: 1.25rem;
+      gap: 14px;
+      font-size: 0.85rem;
+    }
+
+    .fluent-content {
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .fluent-header {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .fluent-app-icon-slot {
+      width: 64px;
+      height: 64px;
+      flex-shrink: 0;
+      transition: transform 0.3s var(--ease-fluent);
+    }
+    .fluent-header:hover .fluent-app-icon-slot {
+      transform: scale(1.08) translateY(-2px);
+    }
+
+    .fluent-app-icon-slot img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .fluent-badge {
+      display: inline-block;
+      background: rgba(183, 148, 246, 0.18);
+      color: var(--lavender-400);
+      border: 1px solid rgba(183, 148, 246, 0.35);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .fluent-title {
+      font-size: 1.85rem;
+      font-weight: 700;
       letter-spacing: -0.02em;
     }
 
-    .logo-icon {
-      width: 34px;
-      height: 34px;
-      background: linear-gradient(135deg, var(--fluent-accent), #d0bcff);
-      border-radius: 10px;
-      display: grid;
-      place-items: center;
-      font-size: 1.1rem;
-      color: #000;
+    .fluent-desc {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+      line-height: 1.5;
     }
 
-    .nav-links {
+    .island-pill {
+      background: rgba(0, 0, 0, 0.45);
+      border-radius: 9999px;
+      padding: 8px 18px;
       display: flex;
       align-items: center;
-      gap: 20px;
-    }
-
-    .platform-switcher {
-      display: flex;
-      background: rgba(255, 255, 255, 0.08);
-      padding: 4px;
-      border-radius: 9999px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .switch-btn {
-      border: none;
-      background: transparent;
-      color: var(--fluent-text-secondary);
-      padding: 6px 16px;
-      border-radius: 9999px;
-      cursor: pointer;
-      font-size: 0.85rem;
-      font-weight: 600;
+      justify-content: space-between;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      margin-bottom: 22px;
       transition: all 0.25s ease;
+    }
+    .island-pill:hover {
+      border-color: rgba(208, 188, 255, 0.4);
+      background: rgba(0, 0, 0, 0.6);
+      transform: scale(1.01);
+    }
+
+    .island-track {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .track-art {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--lavender-400), #52A877);
+      transition: transform 0.5s ease;
+    }
+    .island-pill:hover .track-art {
+      transform: rotate(180deg);
+    }
+
+    .track-meta {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .track-lyrics {
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .eq-wave {
+      display: flex;
+      align-items: center;
+      gap: 2.5px;
+      height: 16px;
+    }
+
+    .eq-bar {
+      width: 2.5px;
+      background: var(--lavender-400);
+      border-radius: 2px;
+      animation: eqBounce 0.9s infinite alternate ease-in-out;
+    }
+    .eq-bar:nth-child(1) { height: 6px; animation-delay: 0.1s; }
+    .eq-bar:nth-child(2) { height: 16px; animation-delay: 0.3s; }
+    .eq-bar:nth-child(3) { height: 9px; animation-delay: 0.2s; }
+    .eq-bar:nth-child(4) { height: 13px; animation-delay: 0.4s; }
+
+    @keyframes eqBounce {
+      0% { transform: scaleY(0.3); }
+      100% { transform: scaleY(1.4); }
+    }
+
+    .fluent-modules {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 640px) {
+      .fluent-modules { grid-template-columns: 1fr; }
+    }
+
+    .fluent-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      transition: all 0.2s var(--ease-fluent);
+    }
+
+    .fluent-card:hover {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-3px);
+    }
+
+    .fluent-card-icon {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+    }
+
+    .fluent-card-icon img {
+      width: 26px;
+      height: 26px;
+      object-fit: contain;
+      transition: transform 0.25s var(--ease-fluent);
+    }
+
+    .fluent-card-body h4 {
+      font-size: 0.92rem;
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+
+    .fluent-card-body p {
+      font-size: 0.83rem;
+      color: rgba(255, 255, 255, 0.65);
+      line-height: 1.4;
+    }
+
+    .fluent-btn-download {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      height: 46px;
+      background: var(--lavender-400);
+      color: #0E0D13;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s var(--ease-fluent);
+    }
+
+    .fluent-btn-download:hover {
+      background: #C4A5FF;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(183, 148, 246, 0.35);
+    }
+
+    .qr-side-banner {
+      margin-top: 20px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px dashed rgba(208, 188, 255, 0.25);
+      border-radius: 8px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      transition: border-color 0.2s ease;
+    }
+    .qr-side-banner:hover {
+      border-color: var(--lavender-300);
+    }
+
+    .qr-text {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .qr-text span:first-child {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--lavender-300);
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
-    .switch-btn.active {
-      background: rgba(255, 255, 255, 0.18);
-      color: #fff;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    .qr-text span:last-child {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.65);
     }
 
-    .gh-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 18px;
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+    .qr-code-box {
+      width: 76px;
+      height: 76px;
+      background: #FFFFFF;
+      padding: 4px;
+      border-radius: 6px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      transition: transform 0.25s var(--ease-bounce);
+    }
+    .qr-side-banner:hover .qr-code-box {
+      transform: scale(1.06);
+    }
+
+    .qr-code-box img {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* === СЕКЦИЯ РЕСУРСОВ === */
+    .resources-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 640px) {
+      .resources-grid { grid-template-columns: 1fr; }
+    }
+
+    .resource-card {
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    html[data-theme="m3"] .resource-card {
+      background: #211F26;
+      border-radius: 16px;
+      border: 1px solid #2B2930;
+    }
+    html[data-theme="m3"] .resource-card:hover {
+      background: #2B2930;
+      transform: translateY(-3px);
+    }
+
+    html[data-theme="fluent"] .resource-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      transition: 0.2s ease;
     }
-    .gh-btn:hover {
-      background: rgba(255, 255, 255, 0.16);
-      border-color: rgba(255, 255, 255, 0.3);
+    html[data-theme="fluent"] .resource-card:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-3px);
     }
 
-    /* Hero */
-    .hero {
-      padding: 70px 24px 40px;
-      text-align: center;
+    .resource-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .resource-card h4 {
+      font-size: 0.94rem;
+      font-weight: 700;
+      color: var(--lavender-300);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .resource-tag {
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .resource-card p {
+      font-size: 0.82rem;
+      color: rgba(255, 255, 255, 0.65);
+      line-height: 1.4;
+    }
+
+    /* =========================================================
+       ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
+       ========================================================= */
+    .tab-view {
+      display: none;
+      opacity: 0;
+    }
+
+    .tab-view.active {
+      display: block;
+      animation: tabFadeIn 0.35s var(--ease-fluent) forwards;
+    }
+
+    @keyframes tabFadeIn {
+      from { opacity: 0; transform: translateY(10px) scale(0.99); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .tabs-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .tabs-nav {
       position: relative;
+      display: inline-flex;
+      padding: 4px;
+      user-select: none;
     }
 
-    .hero::before {
-      content: "";
+    .tab-glider {
       position: absolute;
-      top: -150px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 700px;
-      height: 400px;
-      background: radial-gradient(circle, rgba(96, 205, 255, 0.15) 0%, rgba(208, 188, 255, 0.1) 40%, transparent 70%);
-      filter: blur(60px);
-      z-index: -1;
+      top: 4px;
+      bottom: 4px;
+      left: 0;
+      width: 0;
+      transition: all 0.3s var(--ease-m3);
+      z-index: 1;
       pointer-events: none;
     }
 
-    .hero-badge {
+    .tab-btn {
+      position: relative;
+      z-index: 2;
+      border: none;
+      background: transparent;
+      padding: 7px 18px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: color 0.25s ease;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background-color 0.3s ease;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      padding: 12px 24px;
+    }
+
+    .nav-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-badge {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-icon {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+    }
+
+    .btn-github {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 6px 14px;
-      border-radius: 9999px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      font-size: 0.85rem;
-      margin-bottom: 24px;
-      color: #d0bcff;
+      padding: 8px 14px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .hero {
+      padding: 42px 20px 18px;
+      text-align: center;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 14px;
     }
 
     .hero h1 {
-      font-size: clamp(2.4rem, 5vw, 4.2rem);
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
       font-weight: 800;
       letter-spacing: -0.03em;
       line-height: 1.15;
-      margin-bottom: 20px;
-      background: linear-gradient(180deg, #ffffff 40%, rgba(255,255,255,0.7) 100%);
+      margin-bottom: 14px;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, #FFFFFF 30%, var(--lavender-300) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     .hero p {
-      max-width: 680px;
-      margin: 0 auto 34px;
-      font-size: 1.12rem;
-      color: var(--fluent-text-secondary);
-      font-weight: 400;
-    }
-
-    /* Интерактивный мост Экосистемы */
-    .bridge-banner {
-      max-width: 1040px;
-      margin: 0 auto 60px;
-      background: linear-gradient(90deg, rgba(208, 188, 255, 0.08) 0%, rgba(96, 205, 255, 0.08) 100%);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 16px;
-      padding: 20px 28px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-    .bridge-info {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .bridge-badge {
-      background: #4caf50;
-      color: #000;
-      padding: 3px 8px;
-      border-radius: 6px;
-      font-size: 0.75rem;
-      font-weight: 700;
-    }
-
-    /* ========================================================
-       СПЛИТ-СЕКЦИИ: ANDROID (MATERIAL 3) & WINDOWS (FLUENT MICA)
-       ======================================================== */
-    .split-container {
-      max-width: 1240px;
-      margin: 0 auto;
-      padding: 0 20px 80px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 32px;
-    }
-
-    @media (max-width: 960px) {
-      .split-container {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    /* ---------------- ANDROID (MATERIAL YOU) ---------------- */
-    .platform-panel.android-side {
-      font-family: var(--font-material);
-      background: var(--m3-bg);
-      border-radius: var(--m3-radius-lg);
-      padding: 36px 30px;
-      border: 1px solid rgba(208, 188, 255, 0.15);
-      position: relative;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
-    }
-
-    .m3-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--m3-secondary-container);
-      color: var(--m3-text);
-      padding: 6px 14px;
-      border-radius: var(--m3-radius-pill);
-      font-size: 0.8rem;
-      font-weight: 600;
-      margin-bottom: 20px;
-    }
-
-    .android-title {
-      font-size: 2.2rem;
-      font-weight: 800;
-      color: var(--m3-text);
-      letter-spacing: -0.02em;
-      margin-bottom: 12px;
-    }
-
-    .android-desc {
-      color: var(--m3-text-variant);
-      font-size: 0.98rem;
-      margin-bottom: 28px;
-    }
-
-    /* Карточки M3 */
-    .m3-card {
-      background: var(--m3-surface);
-      border-radius: var(--m3-radius-md);
-      padding: 18px;
-      margin-bottom: 14px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      transition: transform 0.2s ease, background 0.2s ease;
-    }
-    .m3-card:hover {
-      background: var(--m3-surface-high);
-      transform: translateY(-2px);
-    }
-
-    .m3-card-header {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 8px;
-    }
-
-    .m3-card-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      background: var(--m3-primary-container);
-      color: var(--m3-primary);
-      display: grid;
-      place-items: center;
-      font-size: 1.25rem;
-    }
-
-    .m3-card-title {
       font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--m3-text);
+      color: rgba(255, 255, 255, 0.68);
+      max-width: 680px;
+      margin: 0 auto 20px;
     }
 
-    .m3-card-sub {
-      font-size: 0.84rem;
-      color: var(--m3-text-variant);
-    }
-
-    .m3-pill-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
+    .main-wrap {
+      max-width: 860px;
       width: 100%;
-      padding: 16px 24px;
-      background: var(--m3-primary);
-      color: var(--m3-on-primary);
-      border-radius: var(--m3-radius-pill);
-      font-weight: 700;
-      font-size: 1rem;
-      margin-top: 24px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .m3-pill-btn:hover {
-      opacity: 0.92;
-      transform: scale(0.98);
-      box-shadow: 0 6px 20px rgba(208, 188, 255, 0.3);
+      margin: 0 auto;
+      padding: 0 20px 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
     }
 
-    /* ---------------- WINDOWS (FLUENT MICA) ---------------- */
-    .platform-panel.windows-side {
-      font-family: var(--font-fluent);
-      background: var(--mica-bg);
-      backdrop-filter: blur(30px);
-      -webkit-backdrop-filter: blur(30px);
-      border-radius: var(--fluent-radius-card);
-      padding: 36px 30px;
-      border: 1px solid var(--mica-border);
-      position: relative;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    .switch-platform-banner {
+      text-align: center;
+      margin-top: 10px;
     }
 
-    .fluent-tag {
+    .btn-switch-alt {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      background: var(--fluent-accent-bg);
-      color: var(--fluent-accent);
-      border: 1px solid rgba(96, 205, 255, 0.3);
-      padding: 4px 12px;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      margin-bottom: 20px;
-    }
-
-    .windows-title {
-      font-size: 2.2rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      margin-bottom: 12px;
-    }
-
-    .windows-desc {
-      color: var(--fluent-text-secondary);
-      font-size: 0.98rem;
-      margin-bottom: 28px;
-    }
-
-    /* Dynamic Island Widget Demo на Windows */
-    .island-preview {
-      background: #000;
-      border-radius: 9999px;
-      padding: 8px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      margin-bottom: 22px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-    }
-    .island-left {
-      display: flex;
-      align-items: center;
       gap: 10px;
-    }
-    .island-avatar {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #60cdff, #a855f7);
-    }
-    .island-music {
-      font-size: 0.8rem;
+      padding: 12px 24px;
+      font-size: 0.92rem;
       font-weight: 600;
-      color: #fff;
-    }
-    .island-bars {
-      display: flex;
-      align-items: center;
-      gap: 2.5px;
-      height: 14px;
-    }
-    .bar {
-      width: 2.5px;
-      background: var(--fluent-accent);
-      border-radius: 2px;
-      animation: equalize 1s infinite alternate ease-in-out;
-    }
-    .bar:nth-child(1) { height: 6px; animation-delay: 0.1s; }
-    .bar:nth-child(2) { height: 14px; animation-delay: 0.3s; }
-    .bar:nth-child(3) { height: 9px; animation-delay: 0.2s; }
-    .bar:nth-child(4) { height: 12px; animation-delay: 0.4s; }
-
-    @keyframes equalize {
-      0% { transform: scaleY(0.4); }
-      100% { transform: scaleY(1.3); }
-    }
-
-    /* Карточки Mica */
-    .fluent-card {
-      background: var(--mica-card);
-      border-radius: var(--fluent-radius);
-      padding: 16px;
-      margin-bottom: 12px;
-      border: 1px solid var(--mica-border);
-      transition: all 0.2s ease;
-    }
-    .fluent-card:hover {
-      background: var(--mica-card-hover);
-      border-color: var(--mica-border-active);
-    }
-
-    .fluent-card-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 6px;
-    }
-
-    .fluent-icon {
-      font-size: 1.25rem;
-      color: var(--fluent-accent);
-    }
-
-    .fluent-card-title {
-      font-size: 1rem;
-      font-weight: 600;
-    }
-
-    .fluent-card-sub {
-      font-size: 0.84rem;
-      color: var(--fluent-text-secondary);
-    }
-
-    .fluent-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
-      padding: 14px 24px;
-      background: var(--fluent-accent);
-      color: #000;
-      border-radius: var(--fluent-radius);
-      font-weight: 700;
-      font-size: 0.95rem;
-      margin-top: 24px;
       cursor: pointer;
+      font-family: inherit;
       transition: all 0.2s ease;
-      border: none;
-    }
-    .fluent-btn:hover {
-      background: var(--fluent-accent-hover);
-      box-shadow: 0 6px 20px rgba(96, 205, 255, 0.35);
     }
 
-    /* Подвал */
+    .hidden { display: none !important; }
+
     footer {
       border-top: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 32px 24px;
+      padding: 24px;
       text-align: center;
       font-size: 0.85rem;
-      color: rgba(255, 255, 255, 0.4);
-    }
-
-    /* Скрытие по фильтру шапки */
-    .filter-hidden {
-      display: none !important;
-    }
-    .filter-full {
-      grid-column: span 2;
+      color: rgba(255, 255, 255, 0.45);
+      margin-top: auto;
     }
   </style>
 </head>
 <body>
 
-  <!-- НАВБАР -->
+  <!-- ШАПКА -->
   <header>
-    <div class="nav-container">
-      <div class="logo">
-        <div class="logo-icon">⚡</div>
+    <div class="nav-wrap">
+      <div class="brand">
+        <div class="brand-badge">
+          <img class="brand-icon" src="icons/helinstaller.png" alt="Helinstaller Logo" onerror="this.style.display='none'">
+        </div>
         <span>Helinstaller</span>
       </div>
 
-      <div class="nav-links">
-        <div class="platform-switcher">
-          <button class="switch-btn active" id="btn-all" onclick="filterPlatform('all')">Вселенная</button>
-          <button class="switch-btn" id="btn-android" onclick="filterPlatform('android')">Android M3</button>
-          <button class="switch-btn" id="btn-windows" onclick="filterPlatform('windows')">Windows Mica</button>
-        </div>
-
-        <a href="https://github.com/helitop/helinstaller_mobile" target="_blank" class="gh-btn">
-          <span>GitHub</span>
-          <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
-        </a>
-      </div>
+      <a href="https://github.com/helitop/Helinstaller" target="_blank" class="btn-github">
+        <svg width="15" height="15" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+        <span>GitHub</span>
+      </a>
     </div>
   </header>
 
-  <!-- HERO SECTION -->
+  <!-- БАННЕР -->
   <main>
     <section class="hero">
-      <div class="hero-badge">
-        <span>🚀 Две платформы — Единая связка без ограничений</span>
+      <div class="hero-pill">
+        <span id="hero-version-tag">✨ Helinstaller • Загрузка версии...</span>
       </div>
-      <h1>Контролируй систему целиком.<br>На телефоне и на компьютере.</h1>
-      <p>
-        Системный комбайн для Android на базе Shizuku и полнофункциональный центр настройки Windows 11 на движке Fluent с единым мостом удалённого управления по локальной сети.
+      <h1><span>Один проект. Абсолютная свобода.</span></h1>
+      <p id="hero-subtitle">
+        Системный комбайн нового поколения: от глубокого тюнинга без root до тихой пакетной установки.
       </p>
 
-      <!-- Интерактивный статус моста экосистемы -->
-      <div class="bridge-banner">
-        <div class="bridge-info">
-          <span class="bridge-badge">LIVE BRIDGE</span>
-          <div style="text-align: left;">
-            <div style="font-weight: 700; font-size: 0.95rem;">Helinstaller Link (WebSocket & UDP Beacon)</div>
-            <div style="font-size: 0.8rem; color: var(--fluent-text-secondary);">Мониторинг ЦП/ГП/ОЗУ ПК прямо в виджете смартфона, передача прокси и тихая установка WinGet на ПК.</div>
-          </div>
-        </div>
-        <div style="font-family: var(--font-mono); font-size: 0.85rem; color: #60cdff; background: rgba(0,0,0,0.3); padding: 6px 12px; border-radius: 8px;">
-          :49152 UDP | :49153 WS
+      <!-- ПЕРЕКЛЮЧАТЕЛЬ ВКЛАДОК С ПЛАВАЮЩИМ ГЛАЙДЕРОМ -->
+      <div class="tabs-wrap">
+        <div class="tabs-nav" id="tabs-nav-bar">
+          <div class="tab-glider" id="tab-glider"></div>
+          <button class="tab-btn active" id="tab-btn-overview" onclick="switchInnerTab('overview')">Обзор возможностей</button>
+          <button class="tab-btn" id="tab-btn-resources" onclick="switchInnerTab('resources')">Сводка ресурсов & Инструментов</button>
         </div>
       </div>
     </section>
 
-    <!-- СПЛИТ-СЕКЦИЯ -->
-    <div class="split-container" id="split-grid">
-      
-      <!-- ANDROID PANEL (MATERIAL 3) -->
-      <div class="platform-panel android-side" id="panel-android">
-        <div class="m3-tag">
-          <span>🤖 Android 13+ • Material You</span>
-        </div>
-        <h2 class="android-title">Helinstaller Mobile</h2>
-        <p class="android-desc">
-          Глубокая кастомизация Android без Root-прав через Shizuku. Деблоатер, тихая установка сплит-пакетов и персональный каталог модификаций.
-        </p>
+    <div class="main-wrap">
 
-        <div class="m3-card">
-          <div class="m3-card-header">
-            <div class="m3-card-icon">⚡</div>
+      <!-- ============================================== -->
+      <!-- 1. ANDROID БЛОК                                -->
+      <!-- ============================================== -->
+      <div id="wrapper-android" class="hidden">
+        <section class="android-container" id="side-android">
+          <div class="m3-header">
+            <div class="m3-app-icon-slot">
+              <img src="icons/android/Helinstaller.svg" alt="Helinstaller Android" />
+            </div>
             <div>
-              <div class="m3-card-title">Твики системы через Shizuku</div>
-              <div class="m3-card-sub">Плавные 120 Гц, смена DPI, скорость анимаций 0.25x–1.5x, ART AOT компиляция и Doze mode.</div>
+              <span class="m3-badge">Android 13+ • Material 3</span>
+              <h2 class="m3-title">Helinstaller Mobile</h2>
             </div>
           </div>
-        </div>
 
-        <div class="m3-card">
-          <div class="m3-card-header">
-            <div class="m3-card-icon">🗑️</div>
-            <div>
-              <div class="m3-card-title">Умный Debloater</div>
-              <div class="m3-card-sub">Безопасное отключение и удаление предустановленного хлама Xiaomi, Samsung, Huawei и Google.</div>
+          <p class="m3-desc">
+            Системный комбайн без root-прав на базе Shizuku. Полноценная компиляция ART, тихий инсталлер Split APKs и персональный каталог модификаций.
+          </p>
+
+          <!-- Вкладка «Обзор» -->
+          <div id="android-view-overview" class="tab-view active">
+            <div class="m3-modules">
+              <div class="m3-card">
+                <div class="m3-card-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg></div>
+                <div class="m3-card-body">
+                  <h4>Системные твики Shizuku</h4>
+                  <p>Принудительные 120 Гц, регулировка DPI, мгновенные анимации 0.25x–1.5x и deep AOT-компиляция кода.</p>
+                </div>
+              </div>
+
+              <div class="m3-card">
+                <div class="m3-card-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-3.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z"/></svg></div>
+                <div class="m3-card-body">
+                  <h4>Умный Debloater & Заморозка</h4>
+                  <p>Безопасное удаление предустановленного мусора и следящих модулей Xiaomi, Samsung, Huawei и сервисов Google.</p>
+                </div>
+              </div>
+
+              <div class="m3-card">
+                <div class="m3-card-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg></div>
+                <div class="m3-card-body">
+                  <h4>Каталог форков & TDLib</h4>
+                  <p>Прямая выкачка ReVanced, AyuGram, Seal и RiMusic без ограничений скорости с поддержкой тихой установки Split APK.</p>
+                </div>
+              </div>
+
+              <div class="m3-card">
+                <div class="m3-card-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg></div>
+                <div class="m3-card-body">
+                  <h4>MTProto Fake-TLS & Private DNS</h4>
+                  <p>Встроенный чекер рабочих прокси Telegram с пингом и предустановки DNS GeoHide (ChatGPT) и Xbox DNS.</p>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="m3-card">
-          <div class="m3-card-header">
-            <div class="m3-card-icon">📦</div>
-            <div>
-              <div class="m3-card-title">Каталог форков & Telegram API</div>
-              <div class="m3-card-sub">Прямой доступ к ReVanced, Seal, RiMusic, AyuGram через TDLib с тихой установкой Split APKs.</div>
+          <!-- Вкладка «Ресурсы» -->
+          <div id="android-view-resources" class="tab-view">
+            <div class="resources-grid" style="margin-bottom: 28px;">
+              <a href="https://shizuku.rikka.app/" target="_blank" class="resource-card">
+                <div class="resource-title-row">
+                  <h4>Shizuku API</h4>
+                  <span class="resource-tag">ADB Bridge</span>
+                </div>
+                <p>Исполнение привилегированных системных вызовов на уровне ADB без необходимости получения Root-прав.</p>
+              </a>
+
+              <a href="https://revanced.app/" target="_blank" class="resource-card">
+                <div class="resource-title-row">
+                  <h4>ReVanced Team</h4>
+                  <span class="resource-tag">Patcher</span>
+                </div>
+                <p>Официальные открытые патчи без рекламы, со спонсор-блоком и фоновым воспроизведением контента.</p>
+              </a>
+
+              <a href="https://core.telegram.org/tdlib" target="_blank" class="resource-card">
+                <div class="resource-title-row">
+                  <h4>Telegram TDLib</h4>
+                  <span class="resource-tag">CDN Sync</span>
+                </div>
+                <p>Сверхбыстрая прямая загрузка модифицированных клиентов напрямую с Telegram CDN на максимальной скорости.</p>
+              </a>
+
+              <a href="https://github.com/0x192/universal-android-debloater" target="_blank" class="resource-card">
+                <div class="resource-title-row">
+                  <h4>UAD Community Lists</h4>
+                  <span class="resource-tag">Debloat</span>
+                </div>
+                <p>Проверенные глобальным сообществом списки безопасного удаления вендорного софта и телеметрии.</p>
+              </a>
             </div>
           </div>
-        </div>
 
-        <div class="m3-card">
-          <div class="m3-card-header">
-            <div class="m3-card-icon">🛡️</div>
-            <div>
-              <div class="m3-card-title">Чекер MTProto Fake-TLS & DNS</div>
-              <div class="m3-card-sub">GeoHide DNS для ChatGPT и Xbox DNS для игр. Поиск рабочих прокси с пингом в реальном времени.</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Кнопка скачивания APK -->
-        <a href="https://github.com/helitop/helinstaller_mobile/releases/latest" target="_blank" class="m3-pill-btn">
-          <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM12 2L6.5 7.5l1.42 1.41L11 5.83V16h2V5.83l3.08 3.09 1.42-1.41L12 2z"/></svg>
-          <span>Скачать Helinstaller.apk</span>
-        </a>
+          <!-- Кнопка загрузки APK (будет заблокирована, если файла нет в репозитории) -->
+          <a href="#" target="_blank" class="m3-btn-download" id="android-download-btn">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM12 2L6.5 7.5l1.42 1.41L11 5.83V16h2V5.83l3.08 3.09 1.42-1.41L12 2z"/></svg>
+            <span id="android-download-text">Скачать для Android (.apk)</span>
+          </a>
+        </section>
       </div>
 
-      <!-- WINDOWS PANEL (FLUENT MICA) -->
-      <div class="platform-panel windows-side" id="panel-windows">
-        <div class="fluent-tag">
-          <span>🪟 Windows 10 / 11 • Fluent Mica</span>
-        </div>
-        <h2 class="windows-title">Helinstaller Windows</h2>
-        <p class="windows-desc">
-          Комплексный центр настройки и развёртывания системы. WinGet-менеджер, автоустановка Office, Ventoy и скрипты оптимизации.
-        </p>
+      <!-- ============================================== -->
+      <!-- 2. WINDOWS БЛОК                                -->
+      <!-- ============================================== -->
+      <div id="wrapper-windows" class="hidden">
+        <div class="windows-window-wrapper">
+          <div class="mica-glow-1"></div>
+          <div class="mica-glow-2"></div>
+          <div class="mica-glow-3"></div>
 
-        <!-- Dynamic Island Demo -->
-        <div class="island-preview">
-          <div class="island-left">
-            <div class="island-avatar"></div>
-            <div>
-              <div class="island-music">Helinstaller Dynamic Island</div>
-              <div style="font-size: 0.7rem; color: rgba(255,255,255,0.5);">Живая лирика песен и статус задач WinGet</div>
+          <section class="windows-container" id="side-windows">
+            <div class="fluent-titlebar">
+              <span id="windows-titlebar-text">Helinstaller — Windows Dashboard</span>
+              <div class="window-controls">
+                <span>─</span>
+                <span>□</span>
+                <span>✕</span>
+              </div>
             </div>
-          </div>
-          <div class="island-bars">
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-          </div>
-        </div>
 
-        <div class="fluent-card">
-          <div class="fluent-card-header">
-            <span class="fluent-icon">🛠️</span>
-            <div>
-              <div class="fluent-card-title">Твики & Активация MAS</div>
-              <div class="fluent-card-sub">Вечный цифровой HWID для Windows/Office, активация WinRAR, выключение UAC и удаление Яндекс-модулей.</div>
+            <div class="fluent-content">
+              <div class="fluent-header">
+                <div class="fluent-app-icon-slot">
+                  <img src="icons/windows/Helinstaller.svg" alt="Helinstaller Windows" />
+                </div>
+                <div>
+                  <span class="fluent-badge">Windows 11 • Fluent Mica</span>
+                  <h2 class="fluent-title">Helinstaller Windows</h2>
+                </div>
+              </div>
+
+              <p class="fluent-desc">
+                Центр настройки и обслуживания ПК на .NET 10. WinGet-каталог, автоматическое развёртывание Office 2024, Ventoy и аппаратная телеметрия.
+              </p>
+
+              <!-- Dynamic Island -->
+              <div class="island-pill">
+                <div class="island-track">
+                  <div class="track-art"></div>
+                  <div>
+                    <div class="track-meta">Helinstaller Dynamic Island</div>
+                    <div class="track-lyrics">Живая бегущая лирика и статус задач WinGet</div>
+                  </div>
+                </div>
+                <div class="eq-wave">
+                  <div class="eq-bar"></div>
+                  <div class="eq-bar"></div>
+                  <div class="eq-bar"></div>
+                  <div class="eq-bar"></div>
+                </div>
+              </div>
+
+              <!-- Вкладка «Обзор» -->
+              <div id="windows-view-overview" class="tab-view active">
+                <div class="fluent-modules">
+                  <div class="fluent-card">
+                    <div class="fluent-card-icon"><img src="icons/windows/settings.ico" alt="Settings" /></div>
+                    <div class="fluent-card-body">
+                      <h4>Твики, UAC & Активация MAS</h4>
+                      <p>Официальная цифровая лицензия HWID, патч WinRAR, закрытие задач из таскбара и дезинфекция от мусора.</p>
+                    </div>
+                  </div>
+
+                  <div class="fluent-card">
+                    <div class="fluent-card-icon"><img src="icons/windows/package.ico" alt="Ventoy" /></div>
+                    <div class="fluent-card-body">
+                      <h4>Ventoy & Автоустановка OOBE</h4>
+                      <p>Загрузочные флешки, авто-обход TPM 2.0 / SecureBoot и генератор autounattend.xml для чистой установки.</p>
+                    </div>
+                  </div>
+
+                  <div class="fluent-card">
+                    <div class="fluent-card-icon"><img src="icons/windows/wsa.ico" alt="Hardware" /></div>
+                    <div class="fluent-card-body">
+                      <h4>Мониторинг железа & S.M.A.R.T.</h4>
+                      <p>Прямой съем температур ядер, процент загрузки GPU, здоровье SSD и виджет показателей.</p>
+                    </div>
+                  </div>
+
+                  <div class="fluent-card">
+                    <div class="fluent-card-icon"><img src="icons/windows/msstore.ico" alt="WinGet Store" /></div>
+                    <div class="fluent-card-body">
+                      <h4>WinGet & Магазин ПО</h4>
+                      <p>Установка софта без рекламы в тихом режиме и интеллектуальное обновление программ в 1 клик.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Вкладка «Ресурсы» -->
+              <div id="windows-view-resources" class="tab-view">
+                <div class="resources-grid" style="margin-bottom: 24px;">
+                  <a href="https://massgrave.dev/" target="_blank" class="resource-card">
+                    <div class="resource-title-row">
+                      <h4>Massgrave (MAS)</h4>
+                      <span class="resource-tag">Лицензирование</span>
+                    </div>
+                    <p>HWID и Ohook активация Windows и Office с открытым исходным кодом без сторонних бинарников.</p>
+                  </a>
+
+                  <a href="https://schneegans.de/windows/unattend-generator/" target="_blank" class="resource-card">
+                    <div class="resource-title-row">
+                      <h4>Unattend Generator</h4>
+                      <span class="resource-tag">OOBE XML</span>
+                    </div>
+                    <p>Генерация файлов ответов для создания локального аккаунта в обход MS Account и телеметрии.</p>
+                  </a>
+
+                  <a href="https://www.ventoy.net/" target="_blank" class="resource-card">
+                    <div class="resource-title-row">
+                      <h4>Ventoy MultiBoot</h4>
+                      <span class="resource-tag">USB Tool</span>
+                    </div>
+                    <p>Прямое развертывание мультизагрузочных ISO на внешние накопители с интеграцией обхода TPM 2.0.</p>
+                  </a>
+
+                  <a href="https://github.com/microsoft/winget-pkgs" target="_blank" class="resource-card">
+                    <div class="resource-title-row">
+                      <h4>Microsoft WinGet</h4>
+                      <span class="resource-tag">Менеджер ПО</span>
+                    </div>
+                    <p>Официальный репозиторий пакетов Microsoft для автоматической тихой установки проверенного софта.</p>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Кнопка загрузки Windows (Velopack Setup.exe) -->
+              <a href="https://github.com/helitop/Helinstaller/releases/latest" target="_blank" class="fluent-btn-download" id="windows-download-btn">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                <span id="windows-download-text">Скачать для Windows (.exe)</span>
+              </a>
+
+              <!-- QR-код -->
+              <div class="qr-side-banner">
+                <div class="qr-text">
+                  <span id="qr-title-status">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M17 1H7c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-2-2-2zm0 18H7V5h10v14z"/></svg>
+                    Helinstaller Mobile
+                  </span>
+                  <span id="qr-desc-status">Наведите камеру смартфона для быстрой загрузки</span>
+                </div>
+                <div class="qr-code-box" id="qr-box">
+                  <img id="qr-image" src="" alt="QR Android APK" />
+                </div>
+              </div>
             </div>
-          </div>
+          </section>
         </div>
+      </div>
 
-        <div class="fluent-card">
-          <div class="fluent-card-header">
-            <span class="fluent-icon">💿</span>
-            <div>
-              <div class="fluent-card-title">Ventoy & Автоустановка (OOBE)</div>
-              <div class="fluent-card-sub">Создание загрузочных флешек, обход TPM 2.0 / SecureBoot и генерация файла autounattend.xml.</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="fluent-card">
-          <div class="fluent-card-header">
-            <span class="fluent-icon">📊</span>
-            <div>
-              <div class="fluent-card-title">Аппаратный мониторинг & S.M.A.R.T.</div>
-              <div class="fluent-card-sub">Прямой опрос температур ЦП/ГП, нагрузка 3D-ядра, скорость сети и здоровье SSD в реальном времени.</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="fluent-card">
-          <div class="fluent-card-header">
-            <span class="fluent-icon">🌐</span>
-            <div>
-              <div class="fluent-card-title">WinGet & Microsoft Store</div>
-              <div class="fluent-card-sub">Пакетная установка любого ПО без мусора и рекламы. Автоматическое обновление всех программ в 1 клик.</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Кнопка скачивания Windows -->
-        <a href="https://github.com/helitop/helinstaller_mobile/releases" target="_blank" class="fluent-btn">
-          <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.901-1.748"/></svg>
-          <span>Скачать для Windows (.exe)</span>
-        </a>
+      <!-- КНОПКА ПЕРЕКЛЮЧЕНИЯ НА ДРУГУЮ ПЛАТФОРМУ -->
+      <div class="switch-platform-banner">
+        <button class="btn-switch-alt" id="switch-platform-btn" onclick="togglePlatform()"></button>
       </div>
 
     </div>
@@ -723,33 +1248,189 @@
   </footer>
 
   <script>
-    // Интерактивный фильтр вида платформ
-    function filterPlatform(type) {
-      const btnAll = document.getElementById('btn-all');
-      const btnAnd = document.getElementById('btn-android');
-      const btnWin = document.getElementById('btn-windows');
+    const GITHUB_REPO = "helitop/Helinstaller";
 
-      const panelAnd = document.getElementById('panel-android');
-      const panelWin = document.getElementById('panel-windows');
+    const wrapperAnd = document.getElementById('wrapper-android');
+    const wrapperWin = document.getElementById('wrapper-windows');
+    const switchBtn = document.getElementById('switch-platform-btn');
+    const qrImg = document.getElementById('qr-image');
+    const heroSub = document.getElementById('hero-subtitle');
+    const heroVersionTag = document.getElementById('hero-version-tag');
 
-      [btnAll, btnAnd, btnWin].forEach(b => b.classList.remove('active'));
+    const tabBtnOverview = document.getElementById('tab-btn-overview');
+    const tabBtnResources = document.getElementById('tab-btn-resources');
+    const glider = document.getElementById('tab-glider');
 
-      if (type === 'all') {
-        btnAll.classList.add('active');
-        panelAnd.classList.remove('filter-hidden', 'filter-full');
-        panelWin.classList.remove('filter-hidden', 'filter-full');
-      } else if (type === 'android') {
-        btnAnd.classList.add('active');
-        panelAnd.classList.remove('filter-hidden');
-        panelAnd.classList.add('filter-full');
-        panelWin.classList.add('filter-hidden');
-      } else if (type === 'windows') {
-        btnWin.classList.add('active');
-        panelWin.classList.remove('filter-hidden');
-        panelWin.classList.add('filter-full');
-        panelAnd.classList.add('filter-hidden');
+    const andOverview = document.getElementById('android-view-overview');
+    const andResources = document.getElementById('android-view-resources');
+    const winOverview = document.getElementById('windows-view-overview');
+    const winResources = document.getElementById('windows-view-resources');
+
+    const winDownloadBtn = document.getElementById('windows-download-btn');
+    const winDownloadText = document.getElementById('windows-download-text');
+    const andDownloadBtn = document.getElementById('android-download-btn');
+    const andDownloadText = document.getElementById('android-download-text');
+
+    let currentPlatform = 'windows';
+
+    function detectUserPlatform() {
+      const ua = navigator.userAgent || navigator.vendor || window.opera;
+      if (/android/i.test(ua)) return 'android';
+      return 'windows';
+    }
+
+    function updateGlider(activeBtn) {
+      if (!activeBtn || !glider) return;
+      glider.style.left = activeBtn.offsetLeft + 'px';
+      glider.style.width = activeBtn.offsetWidth + 'px';
+    }
+
+    function switchInnerTab(tab) {
+      if (tab === 'overview') {
+        tabBtnOverview.classList.add('active');
+        tabBtnResources.classList.remove('active');
+        updateGlider(tabBtnOverview);
+
+        andOverview.classList.add('active');
+        andResources.classList.remove('active');
+        winOverview.classList.add('active');
+        winResources.classList.remove('active');
+      } else {
+        tabBtnResources.classList.add('active');
+        tabBtnOverview.classList.remove('active');
+        updateGlider(tabBtnResources);
+
+        andOverview.classList.remove('active');
+        andResources.classList.add('active');
+        winOverview.classList.remove('active');
+        winResources.classList.add('active');
       }
     }
+
+    function renderPlatform(platform) {
+      currentPlatform = platform;
+
+      if (platform === 'android') {
+        document.documentElement.setAttribute('data-theme', 'm3');
+        wrapperAnd.classList.remove('hidden');
+        wrapperWin.classList.add('hidden');
+        heroSub.textContent = "Бескомпромиссная кастомизация, компиляция ART и менеджмент софта на вашем смартфоне.";
+        switchBtn.innerHTML = `
+          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.901-1.801"/></svg>
+          <span>Искали версию для Windows?</span>
+        `;
+      } else {
+        document.documentElement.setAttribute('data-theme', 'fluent');
+        wrapperWin.classList.remove('hidden');
+        wrapperAnd.classList.add('hidden');
+        heroSub.textContent = "Центр обслуживания Windows 11: оптимизация железа, WinGet и автоматизация в эстетике Mica.";
+        switchBtn.innerHTML = `
+          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.551 0 .9993.4482.9993.9993.0001.5511-.4483.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0223 3.503C15.5902 8.4102 13.8533 8.081 12 8.081c-1.8534 0-3.5903.3292-5.1368.8687L4.8409 5.4467a.4161.4161 0 00-.5677-.1521.4157.4157 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3432-4.1021-2.6889-7.5743-6.1185-9.4396"/></svg>
+          <span>Искали версию для Android?</span>
+        `;
+      }
+
+      switchInnerTab('overview');
+      setTimeout(() => updateGlider(tabBtnOverview), 60);
+    }
+
+    function togglePlatform() {
+      renderPlatform(currentPlatform === 'windows' ? 'android' : 'windows');
+    }
+
+    // Функция форматирования байт в читаемый размер (КБ / МБ / ГБ)
+function formatBytes(bytes, decimals = 1) {
+  if (!bytes || bytes === 0) return '0 Б';
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ['Б', 'КБ', 'МБ', 'ГБ'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}
+
+async function fetchGitHubReleases() {
+  try {
+    // Получаем последние релизы
+    const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/releases?per_page=10`);
+    if (!res.ok) throw new Error("Releases not found");
+    const releases = await res.json();
+
+    if (!releases.length) {
+      setAndroidInDevelopment();
+      return;
+    }
+
+    // 1. Ищем самый свежий релиз Windows (Setup.exe от Velopack)
+    const winRelease = releases.find(r => r.assets.some(a => a.name.endsWith('-Setup.exe') || a.name.endsWith('.exe')));
+    if (winRelease) {
+      const winAsset = winRelease.assets.find(a => a.name.endsWith('-Setup.exe') || a.name.endsWith('.exe'));
+      const winTag = winRelease.tag_name;
+      const winSize = formatBytes(winAsset.size);
+
+      winDownloadBtn.href = winAsset.browser_download_url;
+      winDownloadText.textContent = `Скачать для Windows ${winTag} • ${winSize}`;
+      document.getElementById('windows-titlebar-text').textContent = `Helinstaller ${winTag} — Windows Dashboard`;
+      
+      if (currentPlatform === 'windows') {
+        heroVersionTag.textContent = `✨ Helinstaller Windows ${winTag} • ${winSize}`;
+      }
+    }
+
+    // 2. Ищем самый свежий релиз Android (.apk)
+    const androidRelease = releases.find(r => r.assets.some(a => a.name.endsWith('.apk')));
+    if (androidRelease) {
+      const apkAsset = androidRelease.assets.find(a => a.name.endsWith('.apk'));
+      const apkTag = androidRelease.tag_name;
+      const apkSize = formatBytes(apkAsset.size);
+
+      andDownloadBtn.href = apkAsset.browser_download_url;
+      andDownloadText.textContent = `Скачать для Android ${apkTag} • ${apkSize}`;
+      andDownloadBtn.classList.remove('btn-disabled');
+
+      // Обновляем QR-код и текст под ним
+      qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(apkAsset.browser_download_url)}&color=21005D&bgcolor=FFFFFF`;
+      document.getElementById('qr-desc-status').textContent = `Прямая загрузка .apk (${apkSize}) камерой смартфона`;
+      document.getElementById('qr-title-status').innerHTML = `
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M17 1H7c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-2-2-2zm0 18H7V5h10v14z"/></svg>
+        Helinstaller Mobile ${apkTag}
+      `;
+      document.getElementById('qr-box').style.display = "grid";
+
+      if (currentPlatform === 'android') {
+        heroVersionTag.textContent = `✨ Helinstaller Mobile ${apkTag} • ${apkSize}`;
+      }
+    } else {
+      setAndroidInDevelopment();
+    }
+
+  } catch (err) {
+    console.warn("Не удалось получить данные о релизах:", err);
+    heroVersionTag.textContent = `✨ Helinstaller • Актуальная версия`;
+    setAndroidInDevelopment();
+  }
+}
+
+    function setAndroidInDevelopment() {
+      andDownloadBtn.removeAttribute('href');
+      andDownloadBtn.classList.add('btn-disabled');
+      andDownloadText.textContent = "В разработке (Скоро)";
+      
+      // Блок QR в Windows
+      document.getElementById('qr-title-status').textContent = "Android в разработке";
+      document.getElementById('qr-desc-status').textContent = "Мобильная версия появится в ближайших релизах";
+      document.getElementById('qr-box').style.display = "none";
+    }
+
+    window.addEventListener('resize', () => {
+      const activeBtn = document.querySelector('.tab-btn.active');
+      if (activeBtn) updateGlider(activeBtn);
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const detected = detectUserPlatform();
+      renderPlatform(detected);
+      fetchGitHubReleases();
+    });
   </script>
 </body>
 </html>
